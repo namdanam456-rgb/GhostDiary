@@ -26,8 +26,6 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const navigate = useNavigate();
   const location = useLocation();
 
-  const INACTIVITY_LIMIT_MS = 10000; // 10 seconds of inactivity triggers blur
-
   const triggerPanicLock = () => {
     setIsPanicLocked(true);
     lockVault(); // immediately destroy the session keys in memory
