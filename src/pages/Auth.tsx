@@ -40,6 +40,12 @@ export default function Auth() {
       
       {/* Mountain & Gradient Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* User uploaded background image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity" 
+          style={{ backgroundImage: "url('/front.png')" }}
+        />
+        
         <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-[#1c0d38] to-transparent opacity-50"></div>
         <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#0b0a10] to-transparent z-10"></div>
         {/* Subtle SVG Mountains placeholder */}

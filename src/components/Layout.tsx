@@ -4,13 +4,33 @@ import {
   PieChart, Mail, Settings, Shield, Unlock, User,
   Ghost
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useSecurity } from '../contexts/SecurityContext';
 import { lockVault } from '../utils/db';
+
+const STOIC_QUOTES = [
+  { text: "We suffer more often in imagination than in reality.", author: "Seneca" },
+  { text: "Silence is a lesson learned through the many sufferings of life.", author: "Seneca" },
+  { text: "The soul becomes dyed with the color of its thoughts.", author: "Marcus Aurelius" },
+  { text: "To be everywhere is to be nowhere.", author: "Seneca" },
+  { text: "He who fears death will never do anything worth of a man who is alive.", author: "Seneca" },
+  { text: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius" },
+  { text: "No person has the power to have everything they want, but it is in their power not to want what they don't have.", author: "Seneca" },
+  { text: "What we advise is that you should keep your thoughts to yourself.", author: "Epictetus" }
+];
 
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { triggerPanicLock } = useSecurity();
+  const [quote, setQuote] = useState(STOIC_QUOTES[0]);
+
+  useEffect(() => {
+    // Pick a random quote on mount
+    const randomQuote = STOIC_QUOTES[Math.floor(Math.random() * STOIC_QUOTES.length)];
+    setQuote(randomQuote);
+  }, []);
+
   const isAuth = location.pathname === '/auth';
 
   if (isAuth) return <Outlet />;
@@ -112,8 +132,16 @@ export default function Layout() {
 
       {/* Main Content Area */}
       <div className="flex-1 md:ml-64 relative">
-
         
+        {/* Stoic Whisper */}
+        <div className="hidden lg:flex absolute top-8 right-10 z-30 max-w-[280px] pointer-events-none animate-fade-in-slow">
+          <p className="text-gray-500 italic text-sm text-right leading-relaxed font-serif">
+            "{quote.text}"
+            <br/>
+            <span className="text-xs text-gray-600 not-italic uppercase tracking-widest mt-1 block">— {quote.author}</span>
+          </p>
+        </div>
+
         <Outlet />
       </div>
 

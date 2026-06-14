@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Flame, FileText, Lock, Edit3, Smile, Frown, Coffee, X } from 'lucide-react';
 import { getEntries, isUnlocked, saveEntries, deleteEntry, type DiaryEntry } from '../utils/db';
 import GhostEditor from '../components/GhostEditor';
+import TutorialModal from '../components/TutorialModal';
 
 export default function Dashboard() {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
@@ -176,6 +177,7 @@ export default function Dashboard() {
 
   return (
     <main className="p-6 md:p-10 max-w-7xl mx-auto w-full flex flex-col gap-8 relative pb-24 md:pb-10 pt-24 md:pt-10">
+      <TutorialModal />
       
       {/* Header */}
       <header>

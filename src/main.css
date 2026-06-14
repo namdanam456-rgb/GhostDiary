@@ -104,3 +104,12 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+@keyframes fade-in-slow {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-slow {
+  animation: fade-in-slow 2s ease-out forwards;
+}
