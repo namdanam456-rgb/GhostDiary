@@ -1,19 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Ghost, Shield, CloudOff, Eye, EyeOff, Moon } from 'lucide-react';
-import { unlockVault, isUnlocked } from '../utils/db';
+import { unlockVault, isUnlocked, isVaultConfigured, setupVault } from '../utils/db';
 
 export default function Auth() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSetupMode, setIsSetupMode] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isUnlocked()) {
       navigate('/');
+      return;
     }
+    
+    isVaultConfigured().then(configured => {
+      setIsSetupMode(!configured);
+    });
   }, [navigate]);
 
   const handleUnlock = async (e: React.FormEvent) => {
@@ -22,11 +28,20 @@ export default function Auth() {
     setLoading(true);
 
     try {
-      const success = await unlockVault(password);
-      if (success) {
-        navigate('/');
+      if (isSetupMode) {
+        const success = await setupVault(password);
+        if (success) {
+          navigate('/');
+        } else {
+          setError('Failed to setup vault. Please try again.');
+        }
       } else {
-        setError('Invalid master password. The vault remains sealed.');
+        const success = await unlockVault(password);
+        if (success) {
+          navigate('/');
+        } else {
+          setError('Invalid master password. The vault remains sealed.');
+        }
       }
     } catch (err) {
       setError('An error occurred during decryption.');
@@ -91,7 +106,7 @@ export default function Auth() {
           <div className="relative">
             <input 
               type={showPassword ? 'text' : 'password'}
-              placeholder="Enter Master Password"
+              placeholder={isSetupMode ? "Create Master Password" : "Enter Master Password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-[#1a1924] border border-gray-700 focus:border-[#a855f7] rounded-xl px-4 py-4 text-white placeholder-gray-500 outline-none transition-all shadow-inner pr-12"
@@ -115,11 +130,11 @@ export default function Auth() {
 
           <button 
             type="submit" 
-            disabled={loading || !password}
+            disabled={loading || !password || password.length < 4}
             className="w-full bg-gradient-to-r from-[#7e22ce] to-[#6b21a8] hover:from-[#9333ea] hover:to-[#7e22ce] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-[0_4px_20px_rgba(126,34,206,0.3)] hover:shadow-[0_4px_25px_rgba(126,34,206,0.5)] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
           >
             <Lock size={18} />
-            {loading ? 'Decrypting Vault...' : 'Unlock Vault'}
+            {loading ? (isSetupMode ? 'Creating Vault...' : 'Decrypting Vault...') : (isSetupMode ? 'Create Vault' : 'Unlock Vault')}
           </button>
         </form>
 
