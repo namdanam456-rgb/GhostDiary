@@ -133,14 +133,16 @@ export default function Layout() {
       {/* Main Content Area */}
       <div className="flex-1 md:ml-64 relative">
         
-        {/* Stoic Whisper */}
-        <div className="hidden lg:flex absolute top-8 right-10 z-30 max-w-[280px] pointer-events-none animate-fade-in-slow">
-          <p className="text-gray-500 italic text-sm text-right leading-relaxed font-serif">
-            "{quote.text}"
-            <br/>
-            <span className="text-xs text-gray-600 not-italic uppercase tracking-widest mt-1 block">— {quote.author}</span>
-          </p>
-        </div>
+        {/* Stoic Whisper - Only on Dashboard */}
+        {location.pathname === '/' && (
+          <div className="hidden lg:flex absolute top-8 right-10 z-30 max-w-[280px] pointer-events-none animate-fade-in-slow">
+            <p className="text-gray-500 italic text-sm text-right leading-relaxed font-serif">
+              "{quote.text}"
+              <br/>
+              <span className="text-xs text-gray-600 not-italic uppercase tracking-widest mt-1 block">— {quote.author}</span>
+            </p>
+          </div>
+        )}
 
         <Outlet />
       </div>
